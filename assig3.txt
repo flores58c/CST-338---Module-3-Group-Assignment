@@ -1,0 +1,235 @@
+package deckCards;
+
+import java.util.Arrays;
+
+public class assig3
+{
+	/*
+	public static void main(String[] args)
+	{
+		Card c1 = new Card();
+		Card c2 = new Card('J',Card.Suit.CLUBS);
+		Card c3 =  new Card('Z',Card.Suit.HEARTS);
+
+		System.out.println(c1.toString());
+		System.out.println(c2.toString());
+		System.out.println(c3.toString());
+		c1.set('W', Card.Suit.SPADES);
+		c2.set('3', Card.Suit.DIAMONDS);
+		c3.set('T', Card.Suit.HEARTS);
+		System.out.println();
+		System.out.println(c1.toString());
+		System.out.println(c2.toString());
+		System.out.println(c3.toString());
+	
+	}*/
+	
+	public static void main(String[] args)
+	{
+		Card c1 = new Card('A',Card.Suit.HEARTS);
+		Card c2 = new Card('J',Card.Suit.CLUBS);
+		
+		Hand h1 = new Hand();
+		for(int i=0; i<h1.MAX_CARDS;i++)
+		{
+			h1.takeCard(c1);
+			h1.takeCard(c2);
+		}
+		System.out.println("After deal: \n" + h1.toString());
+		System.out.println("Card 5 is " + h1.inspectCard(5));
+		while(h1.getNumCards() > 0)
+		{
+			System.out.println("Playing " + h1.playCard());
+		}
+		System.out.println("Card 5 is " + h1.inspectCard(5));
+		System.out.println("After playing all cards:\nHand = ("
+            + h1.toString() + " )");
+		
+	}
+}
+
+// class for creating cards 
+class Card
+{
+	public enum Suit {CLUBS, DIAMONDS, HEARTS, SPADES}
+	private char value;
+	private Suit suit;
+	private boolean errorFlag;
+
+	public Card()
+	{
+		value = 'A';
+		suit = suit.SPADES;
+	}
+
+	//lower case a stands for assigned for aValue and aSuit
+	public Card(char aValue, Suit aSuit)
+	{
+		set(aValue,aSuit);
+	}
+
+	public String toString()
+	{
+		if(errorFlag)
+		{
+			return "not valid";
+		}
+		else
+		{
+			return getValue() + " of " + getSuit();
+		}
+	}
+
+	// this function initializes a card based on the values passed
+	public boolean set(char value, Suit suit)
+	{
+		if(isValid(value,suit))
+		{
+			this.value = value;
+			this.suit = suit;
+			errorFlag = false;
+			return true;
+		}
+		else
+		{
+			errorFlag = true;
+			return false;
+		}
+	}
+
+	// function checks if two cards equal each other
+	public boolean equals(Card card)
+	{
+		return value == card.value && suit == card.suit;
+	}
+
+
+	//this function uses an array as a reference to check if the value is valid
+	//accVal == accepted values
+	// boolean created inside function to check if the array contains the value
+	private boolean isValid(char value, Suit suit)
+	{
+		char[] accVal = {'A','J','Q','K','2','3','4','5','6','7','8','9','T'};
+		boolean check = false;
+		//boolean check = Arrays.asList(accVal).contains(value);
+		for(int i = 0; i<accVal.length;i++)
+		{
+			if(value == accVal[i])
+			{
+				check = true;
+				break;
+			}
+			else
+			{
+				check = false;
+			}
+		}
+		return check;
+	}
+
+	// accessors for value,suit and errorflag
+	public char getValue()
+	{
+		return value;
+	}
+
+	public Suit getSuit()
+	{
+		return suit;
+	}
+
+	public boolean getErrorFlag()
+	{
+		return errorFlag;
+	}
+
+}
+
+/*****************FERNANDO PHASE2*************/
+
+class Hand
+{
+   public static int MAX_CARDS = 50;
+   private Card[] myCards;
+   private int numCards;
+   
+   //DEFAULT CONSTRUCTOR
+   public Hand()
+   {
+      myCards = new Card[MAX_CARDS];
+      numCards = 0;
+   }
+   
+   //RESET HAND - REMOVES ALL CARDS FROM THE DECK
+   public void resetHand()
+   {
+      myCards = new Card[MAX_CARDS];
+      numCards = 0;
+   }
+   
+   //TAKE CARD - ADDS A CARD TO THE NEXT AVAILABLE POSITION IN THE myCards ARRAY.
+   public boolean takeCard(Card Card1)
+   {
+      boolean valid;
+      if (numCards >= MAX_CARDS)
+      {
+         valid = false;
+      }
+      else
+      {
+         myCards[numCards] = Card1;
+         numCards++;
+         valid = true;
+      }
+      return valid;
+   }
+   
+   //PLAY THE CARD - RETURNS AND REMOVES THE CARD 
+   public Card playCard()
+   {
+      Card Card1 = myCards[numCards - 1];
+      myCards[numCards -1] = null;
+      numCards--;
+      return Card1;
+   }
+   
+   //STRING REPRESENTATOIN OF HAND CLASS
+   public String toString()
+   {
+      String A_strng = "Hand = ( ";
+      if (numCards == 0)
+      {
+         A_strng = A_strng + ")";
+      }
+      else
+      {
+         for (int k = 0; k < numCards - 1; k++)
+         {
+            A_strng = A_strng + myCards[k] + ", ";
+         }
+         A_strng = A_strng + myCards[numCards - 1] + " )";
+      }
+      return A_strng;
+   }
+   
+   //RETURNS THE NUMBER OF CARDS
+   public int getNumCards()
+   {
+      return numCards;
+   }
+   
+   //INSPECT THE CARD IN HAND
+   public Card inspectCard (int k)
+   {
+      Card card1;
+      if (k >= numCards)
+      {
+         card1 = new Card ('Z', Card.Suit.SPADES);
+      }
+      else
+      {
+         card1 = myCards[k - 1];
+      }
+      return card1;
+   }
+}
